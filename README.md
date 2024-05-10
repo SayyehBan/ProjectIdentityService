@@ -39,7 +39,3 @@ Dueund Identity Server را می توان برای موارد مختلفی از 
 **مجوز**
 
 Dueund Identity Server تحت مجوز MIT منتشر می شود.
-
-**همکاری**
-
-ما از مشارکت در پروژه Dueund Identity Server استقبال می کنیم. اگر علاقه مند به کمک به پروژه هستید، لطفاً به مخزن GitHub Dueund Identity Server مراجعه کنید.
