@@ -7,7 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddIdentityServer().
     AddDeveloperSigningCredential().
-    AddTestUsers(new List<TestUser> { }).
+    AddTestUsers(new List<TestUser>
+    {
+        new TestUser
+        {
+            IsActive = true,
+            Password="test",
+            Username="test",
+            SubjectId="1"
+        }
+    }).
     AddInMemoryClients(new List<Client> { }).
     AddInMemoryIdentityResources(new List<IdentityResource> { });
 var app = builder.Build();
