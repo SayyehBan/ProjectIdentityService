@@ -16,9 +16,28 @@ builder.Services.AddIdentityServer().
             Username="test",
             SubjectId="1"
         }
-    }).
-    AddInMemoryClients(new List<Client> { }).
-    AddInMemoryIdentityResources(new List<IdentityResource> { });
+    }).AddInMemoryClients(new List<Client> {
+
+      new Client
+      {
+          ClientName="frontend Web",
+          ClientId="webfrotend",
+          ClientSecrets={new Secret ("123456".Sha256()) },
+          AllowedGrantTypes=GrantTypes.ClientCredentials,
+          AllowedScopes={ "orderservice.fullaccsess" }
+      }
+    })
+    .AddInMemoryIdentityResources(new List<IdentityResource> { })
+    .AddInMemoryApiScopes(new List<ApiScope> {
+       new ApiScope("orderservice.fullaccsess")
+    })
+    .AddInMemoryApiResources(new List<ApiResource>
+    {
+         new ApiResource("orderservice","Order Service Api")
+         {
+              Scopes={ "orderservice.fullaccsess" }
+         }
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
