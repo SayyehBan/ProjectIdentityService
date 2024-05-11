@@ -1,5 +1,6 @@
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Test;
+using ProjectIdentityService.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,13 +22,31 @@ builder.Services.AddIdentityServer().
       new Client
       {
           ClientName="frontend Web",
-          ClientId="webfrotend",
+          ClientId="webfrontend",
           ClientSecrets={new Secret ("123456".Sha256()) },
           AllowedGrantTypes=GrantTypes.ClientCredentials,
           AllowedScopes={ "orderservice.fullaccsess" }
+      },
+      new Client
+      {
+          ClientName="Web FrontEnd Code",
+          ClientId="webfrontendcode",
+          ClientSecrets={new Secret ("123456".Sha256()) },
+          AllowedGrantTypes=GrantTypes.Code,
+          RedirectUris={
+              LinkServer.FrontEndUser+"/signin-oidc"
+          },
+          PostLogoutRedirectUris={
+              LinkServer.FrontEndUser+"/signout-callback-oidc"
+          },
+          AllowedScopes={ "openid", "profile" }
       }
     })
-    .AddInMemoryIdentityResources(new List<IdentityResource> { })
+    .AddInMemoryIdentityResources(new List<IdentityResource>
+    {
+        new IdentityResources.OpenId(),
+        new IdentityResources.Profile(),
+    })
     .AddInMemoryApiScopes(new List<ApiScope> {
        new ApiScope("orderservice.fullaccsess")
     })
