@@ -25,7 +25,7 @@ builder.Services.AddIdentityServer().
           ClientId="webfrontend",
           ClientSecrets={new Secret ("123456".Sha256()) },
           AllowedGrantTypes=GrantTypes.ClientCredentials,
-          AllowedScopes={ "orderservice.fullaccsess" }
+          AllowedScopes={ "orderservice.fullaccess" }
       },
       new Client
       {
@@ -39,7 +39,7 @@ builder.Services.AddIdentityServer().
           PostLogoutRedirectUris={
               LinkServer.FrontEndUser+"/signout-callback-oidc"
           },
-          AllowedScopes={ "openid", "profile" }
+          AllowedScopes={ "openid", "profile", "orderservice.fullaccess", "basket.fullaccess" }
       }
     })
     .AddInMemoryIdentityResources(new List<IdentityResource>
@@ -47,15 +47,20 @@ builder.Services.AddIdentityServer().
         new IdentityResources.OpenId(),
         new IdentityResources.Profile(),
     })
-    .AddInMemoryApiScopes(new List<ApiScope> {
-       new ApiScope("orderservice.fullaccsess")
+     .AddInMemoryApiScopes(new List<ApiScope> {
+       new ApiScope("orderservice.fullaccess"),
+       new ApiScope("basket.fullaccess"),
     })
     .AddInMemoryApiResources(new List<ApiResource>
     {
          new ApiResource("orderservice","Order Service Api")
          {
-              Scopes={ "orderservice.fullaccsess" }
-         }
+              Scopes={ "orderservice.fullaccess" }
+         },
+        new ApiResource("basketService","Baket Api Service")
+        {
+            Scopes={ "basket.fullaccess" }
+        }
     });
 var app = builder.Build();
 
