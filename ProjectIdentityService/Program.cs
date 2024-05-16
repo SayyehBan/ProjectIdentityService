@@ -18,7 +18,6 @@ builder.Services.AddIdentityServer().
             SubjectId="1"
         }
     }).AddInMemoryClients(new List<Client> {
-
       new Client
       {
           ClientName="frontend Web",
@@ -39,29 +38,46 @@ builder.Services.AddIdentityServer().
           PostLogoutRedirectUris={
               LinkServer.FrontEndUser+"/signout-callback-oidc"
           },
-          AllowedScopes={ "openid", "profile", "orderservice.fullaccess", "basket.fullaccess" }
-      }
+         AllowedScopes={ "openid", "profile" , "orderservice.getorders", "basket.fullaccess" }
+      },
+       new Client
+        {
+            ClientName="AdminFront End",
+            ClientId ="adminfrontend",
+            ClientSecrets={new Secret("123456".Sha256())},
+            AllowedGrantTypes=GrantTypes.Code,
+          RedirectUris={
+              LinkServer.FrontEndUser+"/signin-oidc"
+          },
+          PostLogoutRedirectUris={
+              LinkServer.FrontEndUser+"/signout-callback-oidc"
+          },
+              AllowedScopes={"openid","profile", "orderservice.getorders", "orderservice.management" }
+        }
     })
-    .AddInMemoryIdentityResources(new List<IdentityResource>
-    {
+   .AddInMemoryIdentityResources(new List<IdentityResource> {
+
         new IdentityResources.OpenId(),
-        new IdentityResources.Profile(),
+        new IdentityResources.Profile()
     })
-     .AddInMemoryApiScopes(new List<ApiScope> {
-       new ApiScope("orderservice.fullaccess"),
+    .AddInMemoryApiScopes(new List<ApiScope> {
+       new ApiScope("orderservice.management"),
+       new ApiScope("orderservice.getorders"),
        new ApiScope("basket.fullaccess"),
     })
     .AddInMemoryApiResources(new List<ApiResource>
     {
          new ApiResource("orderservice","Order Service Api")
          {
-              Scopes={ "orderservice.fullaccess" }
+              Scopes={ "orderservice.management" , "orderservice.getorders" }
          },
-        new ApiResource("basketService","Baket Api Service")
-        {
-            Scopes={ "basket.fullaccess" }
-        }
+           new ApiResource("basketService","Baket Api Service")
+          {
+          Scopes={ "basket.fullaccess" }
+          }
     });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
