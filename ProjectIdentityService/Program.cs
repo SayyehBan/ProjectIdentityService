@@ -18,14 +18,14 @@ builder.Services.AddIdentityServer().
             SubjectId="1"
         }
     }).AddInMemoryClients(new List<Client> {
-      new Client
-      {
-          ClientName="frontend Web",
-          ClientId="webfrontend",
-          ClientSecrets={new Secret ("123456".Sha256()) },
-          AllowedGrantTypes=GrantTypes.ClientCredentials,
-          AllowedScopes={ "orderservice.fullaccess" }
-      },
+      //new Client
+      //{
+      //    ClientName="frontend Web",
+      //    ClientId="webfrontend",
+      //    ClientSecrets={new Secret ("123456".Sha256()) },
+      //    AllowedGrantTypes=GrantTypes.ClientCredentials,
+      //    AllowedScopes={ "orderservice.fullaccess" }
+      //},
       new Client
       {
           ClientName="Web FrontEnd Code",
@@ -38,7 +38,7 @@ builder.Services.AddIdentityServer().
           PostLogoutRedirectUris={
               LinkServer.FrontEndUser+"/signout-callback-oidc"
           },
-         AllowedScopes={ "openid", "profile" , "orderservice.getorders", "basket.fullaccess" }
+          AllowedScopes={ "openid", "profile" , "orderservice.getorders", "basket.fullaccess" , "apigatewayforweb.fullaccess" }
       },
        new Client
         {
@@ -64,17 +64,22 @@ builder.Services.AddIdentityServer().
        new ApiScope("orderservice.management"),
        new ApiScope("orderservice.getorders"),
        new ApiScope("basket.fullaccess"),
+       new ApiScope("apigatewayforweb.fullaccess"),
     })
     .AddInMemoryApiResources(new List<ApiResource>
     {
-         new ApiResource("orderservice","Order Service Api")
+        new ApiResource("orderservice","Order Service Api")
          {
               Scopes={ "orderservice.management" , "orderservice.getorders" }
          },
-           new ApiResource("basketService","Baket Api Service")
+        new ApiResource("basketService","Baket Api Service")
           {
           Scopes={ "basket.fullaccess" }
-          }
+          },
+        new ApiResource("apigatewayforweb","Api gateway For FrontEnd Web")
+          {
+          Scopes={ "apigatewayforweb.fullaccess" }
+          },
     });
 
 
