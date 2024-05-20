@@ -52,7 +52,11 @@ builder.Services.AddIdentityServer().
           PostLogoutRedirectUris={
               LinkServer.FrontEndAdmin+"/signout-callback-oidc"
           },
-              AllowedScopes={"openid","profile", "orderservice.getorders", "orderservice.management" }
+           AllowedScopes={"openid","profile",
+               "orderservice.getorders",
+               "orderservice.management" ,
+              "apigatewayadmin.fullaccess",
+              "productservice.admin"}
         }
     })
    .AddInMemoryIdentityResources(new List<IdentityResource> {
@@ -65,6 +69,8 @@ builder.Services.AddIdentityServer().
        new ApiScope("orderservice.getorders"),
        new ApiScope("basket.fullaccess"),
        new ApiScope("apigatewayforweb.fullaccess"),
+       new ApiScope("apigatewayadmin.fullaccess"),
+       new ApiScope("productservice.admin"),
     })
     .AddInMemoryApiResources(new List<ApiResource>
     {
@@ -77,9 +83,17 @@ builder.Services.AddIdentityServer().
           Scopes={ "basket.fullaccess" }
           },
         new ApiResource("apigatewayforweb","Api gateway For FrontEnd Web")
-          {
-          Scopes={ "apigatewayforweb.fullaccess" }
-          },
+        {
+            Scopes={ "apigatewayforweb.fullaccess" }
+        },
+        new ApiResource("apigatewayadmin","Api gateway For Admin")
+        {
+            Scopes={ "apigatewayadmin.fullaccess" }
+        },
+        new ApiResource("productservice","Api gateway For FrontEnd Web")
+        {
+            Scopes={ "productservice.admin" }
+        }
     });
 
 
