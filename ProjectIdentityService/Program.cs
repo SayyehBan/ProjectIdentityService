@@ -47,10 +47,10 @@ builder.Services.AddIdentityServer().
             ClientSecrets={new Secret("123456".Sha256())},
             AllowedGrantTypes=GrantTypes.Code,
           RedirectUris={
-              LinkServer.FrontEndUser+"/signin-oidc"
+              LinkServer.FrontEndAdmin+"/signin-oidc"
           },
           PostLogoutRedirectUris={
-              LinkServer.FrontEndUser+"/signout-callback-oidc"
+              LinkServer.FrontEndAdmin+"/signout-callback-oidc"
           },
               AllowedScopes={"openid","profile", "orderservice.getorders", "orderservice.management" }
         }
