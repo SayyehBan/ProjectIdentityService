@@ -18,14 +18,6 @@ builder.Services.AddIdentityServer().
             SubjectId="1"
         }
     }).AddInMemoryClients(new List<Client> {
-      //new Client
-      //{
-      //    ClientName="frontend Web",
-      //    ClientId="webfrontend",
-      //    ClientSecrets={new Secret ("123456".Sha256()) },
-      //    AllowedGrantTypes=GrantTypes.ClientCredentials,
-      //    AllowedScopes={ "orderservice.fullaccess" }
-      //},
       new Client
       {
           ClientName="Web FrontEnd Code",
@@ -38,7 +30,11 @@ builder.Services.AddIdentityServer().
           PostLogoutRedirectUris={
               LinkServer.FrontEndUser+"/signout-callback-oidc"
           },
-          AllowedScopes={ "openid", "profile" , "orderservice.getorders", "basket.fullaccess" , "apigatewayforweb.fullaccess" }
+          AllowedScopes={ "openid", "profile" , "orderservice.getorders", "basket.fullaccess" , "apigatewayforweb.fullaccess" },
+          AllowOfflineAccess=true,
+          AccessTokenLifetime=60,
+          RefreshTokenUsage=TokenUsage.ReUse,
+          RefreshTokenExpiration = TokenExpiration.Sliding,
       },
        new Client
         {
