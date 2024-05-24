@@ -1,23 +1,19 @@
 using Duende.IdentityServer.Models;
-using Duende.IdentityServer.Test;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using ProjectIdentityService.Data;
 using ProjectIdentityService.Model;
+using SayyehBanTools.ConnectionDB;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().
+  AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDbContext<ApplicationDbContext>(p => p.UseSqlServer(SqlServerConnection.ConnectionString(".", "aspIdentityDB", "TestConnection", "@123456")));
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddIdentityServer().
     AddDeveloperSigningCredential().
-    AddTestUsers(new List<TestUser>
-    {
-        new TestUser
-        {
-            IsActive = true,
-            Password="test",
-            Username="test",
-            SubjectId="1"
-        }
-    }).AddInMemoryClients(new List<Client> {
+    AddInMemoryClients(new List<Client> {
       new Client
       {
           ClientName="Web FrontEnd Code",
@@ -60,7 +56,7 @@ builder.Services.AddIdentityServer().
         new IdentityResources.OpenId(),
         new IdentityResources.Profile()
     })
-    .AddInMemoryApiScopes(new List<ApiScope> {
+   .AddInMemoryApiScopes(new List<ApiScope> {
        new ApiScope("orderservice.management"),
        new ApiScope("orderservice.getorders"),
        new ApiScope("basket.fullaccess"),
@@ -68,7 +64,7 @@ builder.Services.AddIdentityServer().
        new ApiScope("apigatewayadmin.fullaccess"),
        new ApiScope("productservice.admin"),
     })
-    .AddInMemoryApiResources(new List<ApiResource>
+   .AddInMemoryApiResources(new List<ApiResource>
     {
         new ApiResource("orderservice","Order Service Api")
          {
@@ -90,17 +86,19 @@ builder.Services.AddIdentityServer().
         {
             Scopes={ "productservice.admin" }
         }
-    });
+    }).
+    AddAspNetIdentity<IdentityUser>();
 
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    //app.UseHsts();
+    SeedUserData.Seed(app);
 }
 
 app.UseHttpsRedirection();
