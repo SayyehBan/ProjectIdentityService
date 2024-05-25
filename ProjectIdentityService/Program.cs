@@ -26,7 +26,7 @@ builder.Services.AddIdentityServer().
           PostLogoutRedirectUris={
               LinkServer.FrontEndUser+"/signout-callback-oidc"
           },
-          AllowedScopes={ "openid", "profile" , "orderservice.getorders", "basket.fullaccess" , "apigatewayforweb.fullaccess" },
+          AllowedScopes={ "openid", "profile" , "orderservice.getorders", "basket.fullaccess" , "apigatewayforweb.fullaccess" ,"roles"},
           AllowOfflineAccess=true,
           AccessTokenLifetime=60,
           RefreshTokenUsage=TokenUsage.ReUse,
@@ -48,20 +48,25 @@ builder.Services.AddIdentityServer().
                "orderservice.getorders",
                "orderservice.management" ,
               "apigatewayadmin.fullaccess",
-              "productservice.admin"}
+              "productservice.admin","roles"},
+           AllowOfflineAccess=true,
+          AccessTokenLifetime=60,
+          RefreshTokenUsage=TokenUsage.ReUse,
+          RefreshTokenExpiration = TokenExpiration.Sliding,
         }
     })
    .AddInMemoryIdentityResources(new List<IdentityResource> {
 
         new IdentityResources.OpenId(),
-        new IdentityResources.Profile()
+        new IdentityResources.Profile(),
+        new IdentityResource("roles","User role(s)",new List<string> {"role"})
     })
    .AddInMemoryApiScopes(new List<ApiScope> {
        new ApiScope("orderservice.management"),
        new ApiScope("orderservice.getorders"),
        new ApiScope("basket.fullaccess"),
-       new ApiScope("apigatewayforweb.fullaccess"),
-       new ApiScope("apigatewayadmin.fullaccess"),
+       new ApiScope("apigatewayforweb.fullaccess", new List < string > { "role" }),
+       new ApiScope("apigatewayadmin.fullaccess",new List<string>{"role"}),
        new ApiScope("productservice.admin"),
     })
    .AddInMemoryApiResources(new List<ApiResource>
